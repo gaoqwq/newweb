@@ -1,0 +1,660 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>高祖俊的个人网站</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#165DFF',
+                        secondary: '#FF7D00',
+                        dark: '#1D2129',
+                        light: '#F2F3F5'
+                    },
+                    fontFamily: {
+                        inter: ['Inter', 'system-ui', 'sans-serif'],
+                    },
+                }
+            }
+        }
+    </script>
+    <style type="text/tailwindcss">
+        @layer utilities {
+            .content-auto {
+                content-visibility: auto;
+            }
+            .text-shadow {
+                text-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            }
+            .transition-custom {
+                transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            }
+            .hover-scale {
+                transition: transform 0.3s ease;
+            }
+            .hover-scale:hover {
+                transform: scale(1.03);
+            }
+        }
+    </style>
+</head>
+<body class="font-inter bg-gray-50 min-h-screen flex flex-col">
+    <!-- 登录页面 -->
+    <div id="login-page" class="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-50 to-indigo-100">
+        <div class="w-full max-w-md p-8 bg-white rounded-2xl shadow-xl transform transition-all duration-500 hover:shadow-2xl">
+            <div class="text-center mb-8">
+                <div class="w-20 h-20 bg-primary/10 rounded-full flex items-center justify-center mx-auto mb-4">
+                    <i class="fa fa-user-circle-o text-4xl text-primary"></i>
+                </div>
+                <h2 class="text-[clamp(1.5rem,3vw,2rem)] font-bold text-dark">个人网站登录</h2>
+                <p class="text-gray-500 mt-2">请输入账号和密码访问</p>
+            </div>
+            <form id="login-form" class="space-y-5">
+                <div>
+                    <label for="username" class="block text-sm font-medium text-gray-700 mb-1">账号</label>
+                    <div class="relative">
+                        <span class="absolute inset-y-0 left-0 flex items-center pl-3 text-gray-500">
+                            <i class="fa fa-user"></i>
+                        </span>
+                        <input type="text" id="username" name="username" placeholder="请输入账号" class="w-full pl-10 pr-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-primary/50 focus:border-primary outline-none transition-all" required>
+                    </div>
+                </div>
+                <div>
+                    <label for="password" class="block text-sm font-medium text-gray-700 mb-1">密码</label>
+                    <div class="relative">
+                        <span class="absolute inset-y-0 left-0 flex items-center pl-3 text-gray-500">
+                            <i class="fa fa-lock"></i>
+                        </span>
+                        <input type="password" id="password" name="password" placeholder="请输入密码" class="w-full pl-10 pr-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-primary/50 focus:border-primary outline-none transition-all" required>
+                    </div>
+                </div>
+                <button type="submit" class="w-full bg-primary hover:bg-primary/90 text-white font-medium py-3 px-4 rounded-lg shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-0.5 flex items-center justify-center">
+                    <span>登录</span>
+                    <i class="fa fa-arrow-right ml-2"></i>
+                </button>
+            </form>
+            <div class="mt-6 text-center text-gray-500 text-sm">
+                <p>© 2025 高祖俊的个人网站</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- 主页面 -->
+    <div id="main-page" class="hidden flex flex-col min-h-screen">
+        <!-- 导航栏 -->
+        <header class="bg-primary text-white shadow-md fixed w-full z-50 transition-all duration-300">
+            <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="flex justify-between items-center h-16">
+                    <div class="flex items-center">
+                        <i class="fa fa-user-circle-o text-2xl mr-2"></i>
+                        <span class="font-bold text-xl">高祖俊的个人网站</span>
+                    </div>
+                    <nav class="hidden md:flex space-x-8">
+                        <a href="#about" class="text-white hover:text-gray-200 transition-colors font-medium">关于我</a>
+                        <a href="#education" class="text-white hover:text-gray-200 transition-colors font-medium">教育背景</a>
+                        <a href="#hobbies" class="text-white hover:text-gray-200 transition-colors font-medium">兴趣爱好</a>
+                        <a href="#contact" class="text-white hover:text-gray-200 transition-colors font-medium">联系方式</a>
+                    </nav>
+                    <button id="logout-btn" class="bg-white/20 hover:bg-white/30 text-white px-4 py-2 rounded-lg transition-all flex items-center">
+                        <i class="fa fa-sign-out mr-2"></i>
+                        <span>退出登录</span>
+                    </button>
+                    <button id="mobile-menu-btn" class="md:hidden text-white focus:outline-none">
+                        <i class="fa fa-bars text-xl"></i>
+                    </button>
+                </div>
+            </div>
+            <!-- 移动端菜单 -->
+            <div id="mobile-menu" class="hidden md:hidden bg-primary/95 backdrop-blur-sm shadow-lg">
+                <div class="px-2 pt-2 pb-3 space-y-1 sm:px-3">
+                    <a href="#about" class="block px-3 py-2 rounded-md text-white font-medium hover:bg-white/10">关于我</a>
+                    <a href="#education" class="block px-3 py-2 rounded-md text-white font-medium hover:bg-white/10">教育背景</a>
+                    <a href="#hobbies" class="block px-3 py-2 rounded-md text-white font-medium hover:bg-white/10">兴趣爱好</a>
+                    <a href="#contact" class="block px-3 py-2 rounded-md text-white font-medium hover:bg-white/10">联系方式</a>
+                </div>
+            </div>
+        </header>
+
+        <!-- 主内容 -->
+        <main class="flex-grow pt-16">
+            <!-- 英雄区域 -->
+            <section class="bg-gradient-to-br from-primary to-indigo-600 text-white py-20 md:py-32">
+                <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+                    <div class="flex flex-col md:flex-row items-center">
+                        <div class="md:w-1/2 mb-10 md:mb-0">
+                            <h1 class="text-[clamp(2rem,5vw,3.5rem)] font-bold leading-tight text-shadow mb-4">
+                                你好，我是<span class="text-secondary">高祖俊</span>
+                            </h1>
+                            <p class="text-[clamp(1rem,2vw,1.25rem)] text-gray-100 mb-8 max-w-lg">
+                                五邑大学通信工程专业大三学生，热爱技术与生活，不断探索与成长。
+                            </p>
+                            <div class="flex flex-wrap gap-4">
+                                <a href="#contact" class="bg-white text-primary hover:bg-gray-100 font-medium py-3 px-6 rounded-lg shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-0.5 flex items-center">
+                                    <i class="fa fa-handshake-o mr-2"></i>
+                                    联系我
+                                </a>
+                                <a href="#hobbies" class="bg-secondary text-white hover:bg-secondary/90 font-medium py-3 px-6 rounded-lg shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-0.5 flex items-center">
+                                    <i class="fa fa-heart mr-2"></i>
+                                    了解我的爱好
+                                </a>
+                            </div>
+                        </div>
+                        <div class="md:w-1/2 flex justify-center">
+                            <div class="relative w-64 h-64 md:w-80 md:h-80">
+                                <div class="absolute inset-0 bg-secondary/20 rounded-full animate-pulse"></div>
+                                <div class="relative w-full h-full rounded-full overflow-hidden border-4 border-white shadow-2xl">
+                                    <img src="https://picsum.photos/seed/gaozj/400/400" alt="高祖俊的照片" class="w-full h-full object-cover">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 关于我 -->
+            <section id="about" class="py-16 bg-white">
+                <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+                    <div class="text-center mb-12">
+                        <h2 class="text-[clamp(1.75rem,4vw,2.5rem)] font-bold text-dark mb-4">关于我</h2>
+                        <div class="w-20 h-1 bg-primary mx-auto rounded-full"></div>
+                    </div>
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                        <div class="bg-gray-50 p-8 rounded-xl shadow-md hover-scale">
+                            <div class="w-16 h-16 bg-primary/10 rounded-full flex items-center justify-center mb-6 mx-auto">
+                                <i class="fa fa-user text-2xl text-primary"></i>
+                            </div>
+                            <h3 class="text-xl font-bold text-center mb-4">个人信息</h3>
+                            <ul class="space-y-3 text-gray-700">
+                                <li class="flex items-center">
+                                    <i class="fa fa-id-card text-primary mr-3 w-5"></i>
+                                    <span>姓名: 高祖俊</span>
+                                </li>
+                                <li class="flex items-center">
+                                    <i class="fa fa-birthday-cake text-primary mr-3 w-5"></i>
+                                    <span>年龄: 24岁</span>
+                                </li>
+                                <li class="flex items-center">
+                                    <i class="fa fa-map-marker text-primary mr-3 w-5"></i>
+                                    <span>籍贯: 广东深圳</span>
+                                </li>
+                                <li class="flex items-center">
+                                    <i class="fa fa-graduation-cap text-primary mr-3 w-5"></i>
+                                    <span>专业: 通信工程</span>
+                                </li>
+                            </ul>
+                        </div>
+                        <div class="bg-gray-50 p-8 rounded-xl shadow-md hover-scale">
+                            <div class="w-16 h-16 bg-primary/10 rounded-full flex items-center justify-center mb-6 mx-auto">
+                                <i class="fa fa-university text-2xl text-primary"></i>
+                            </div>
+                            <h3 class="text-xl font-bold text-center mb-4">学校信息</h3>
+                            <ul class="space-y-3 text-gray-700">
+                                <li class="flex items-center">
+                                    <i class="fa fa-building text-primary mr-3 w-5"></i>
+                                    <span>学校: 五邑大学</span>
+                                </li>
+                                <li class="flex items-center">
+                                    <i class="fa fa-user-circle-o text-primary mr-3 w-5"></i>
+                                    <span>学号: 3124000245</span>
+                                </li>
+                                <li class="flex items-center">
+                                    <i class="fa fa-users text-primary mr-3 w-5"></i>
+                                    <span>班级: 240931</span>
+                                </li>
+                                <li class="flex items-center">
+                                    <i class="fa fa-calendar text-primary mr-3 w-5"></i>
+                                    <span>年级: 大三</span>
+                                </li>
+                            </ul>
+                        </div>
+                        <div class="bg-gray-50 p-8 rounded-xl shadow-md hover-scale">
+                            <div class="w-16 h-16 bg-primary/10 rounded-full flex items-center justify-center mb-6 mx-auto">
+                                <i class="fa fa-star text-2xl text-primary"></i>
+                            </div>
+                            <h3 class="text-xl font-bold text-center mb-4">个人简介</h3>
+                            <p class="text-gray-700 leading-relaxed">
+                                我是五邑大学通信工程专业的一名大三学生。我对通信技术有着浓厚的兴趣，特别是在5G和物联网领域。我喜欢通过摄影记录生活中的美好瞬间，也热爱骑行探索城市的每个角落。此外，我还热衷于电子竞技和游泳，这些爱好让我在紧张的学习之余能够保持身心健康。
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 教育背景 -->
+            <section id="education" class="py-16 bg-gray-50">
+                <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+                    <div class="text-center mb-12">
+                        <h2 class="text-[clamp(1.75rem,4vw,2.5rem)] font-bold text-dark mb-4">教育背景</h2>
+                        <div class="w-20 h-1 bg-primary mx-auto rounded-full"></div>
+                    </div>
+                    <div class="relative">
+                        <!-- 时间线 -->
+                        <div class="absolute left-0 md:left-1/2 top-0 bottom-0 w-1 bg-primary/30 transform md:-translate-x-1/2"></div>
+                        
+                        <!-- 教育经历1 -->
+                        <div class="relative mb-12">
+                            <div class="flex flex-col md:flex-row items-center">
+                                <div class="md:w-1/2 md:pr-12 md:text-right order-2 md:order-1 mt-4 md:mt-0">
+                                    <div class="bg-white p-6 rounded-xl shadow-md hover-scale">
+                                        <h3 class="text-xl font-bold text-dark mb-2">五邑大学</h3>
+                                        <p class="text-primary font-medium mb-2">通信工程 | 本科</p>
+                                        <p class="text-gray-600 mb-3">2023年9月 - 至今</p>
+                                        <p class="text-gray-700">
+                                            主要学习课程包括：信号与系统、通信原理、数字信号处理、电磁场与电磁波、微波技术与天线、移动通信、光纤通信等。目前GPA: 3.8/4.0，专业排名前10%。
+                                        </p>
+                                    </div>
+                                </div>
+                                <div class="z-10 order-1 md:order-2 flex justify-center">
+                                    <div class="w-10 h-10 rounded-full bg-primary text-white flex items-center justify-center shadow-lg">
+                                        <i class="fa fa-graduation-cap"></i>
+                                    </div>
+                                </div>
+                                <div class="md:w-1/2 md:pl-12 order-3 hidden md:block"></div>
+                            </div>
+                        </div>
+                        
+                        <!-- 教育经历2 -->
+                        <div class="relative mb-12">
+                            <div class="flex flex-col md:flex-row items-center">
+                                <div class="md:w-1/2 md:pr-12 order-2 md:order-1 hidden md:block"></div>
+                                <div class="z-10 order-1 md:order-2 flex justify-center">
+                                    <div class="w-10 h-10 rounded-full bg-primary text-white flex items-center justify-center shadow-lg">
+                                        <i class="fa fa-book"></i>
+                                    </div>
+                                </div>
+                                <div class="md:w-1/2 md:pl-12 order-3 mt-4 md:mt-0">
+                                    <div class="bg-white p-6 rounded-xl shadow-md hover-scale">
+                                        <h3 class="text-xl font-bold text-dark mb-2">深圳高级中学</h3>
+                                        <p class="text-primary font-medium mb-2">理科 | 高中</p>
+                                        <p class="text-gray-600 mb-3">2020年9月 - 2023年6月</p>
+                                        <p class="text-gray-700">
+                                            高中期间积极参与学校的科技创新社团和数学竞赛，曾获得全国中学生物理竞赛省级二等奖，全国中学生数学竞赛市级一等奖。
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 兴趣爱好 -->
+            <section id="hobbies" class="py-16 bg-white">
+                <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+                    <div class="text-center mb-12">
+                        <h2 class="text-[clamp(1.75rem,4vw,2.5rem)] font-bold text-dark mb-4">兴趣爱好</h2>
+                        <div class="w-20 h-1 bg-primary mx-auto rounded-full"></div>
+                    </div>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
+                        <!-- 爱好1 -->
+                        <div class="bg-gray-50 rounded-xl overflow-hidden shadow-md hover-scale">
+                            <div class="h-48 overflow-hidden">
+                                <img src="https://picsum.photos/seed/photography/600/400" alt="摄影爱好" class="w-full h-full object-cover transition-transform duration-500 hover:scale-110">
+                            </div>
+                            <div class="p-6">
+                                <div class="w-12 h-12 bg-primary/10 rounded-full flex items-center justify-center mb-4">
+                                    <i class="fa fa-camera text-xl text-primary"></i>
+                                </div>
+                                <h3 class="text-xl font-bold text-dark mb-3">摄影</h3>
+                                <p class="text-gray-700">
+                                    我喜欢用相机记录生活中的美好瞬间，特别热衷于自然风光和人文摄影。摄影让我学会观察和发现生活中的美。
+                                </p>
+                            </div>
+                        </div>
+                        
+                        <!-- 爱好2 -->
+                        <div class="bg-gray-50 rounded-xl overflow-hidden shadow-md hover-scale">
+                            <div class="h-48 overflow-hidden">
+                                <img src="https://picsum.photos/seed/cycling/600/400" alt="骑行爱好" class="w-full h-full object-cover transition-transform duration-500 hover:scale-110">
+                            </div>
+                            <div class="p-6">
+                                <div class="w-12 h-12 bg-primary/10 rounded-full flex items-center justify-center mb-4">
+                                    <i class="fa fa-bicycle text-xl text-primary"></i>
+                                </div>
+                                <h3 class="text-xl font-bold text-dark mb-3">骑行</h3>
+                                <p class="text-gray-700">
+                                    骑行是我探索城市和大自然的方式，周末我经常会骑行到郊外，享受风和自由，感受不同的风景和文化。
+                                </p>
+                            </div>
+                        </div>
+                        
+                        <!-- 爱好3 -->
+                        <div class="bg-gray-50 rounded-xl overflow-hidden shadow-md hover-scale">
+                            <div class="h-48 overflow-hidden">
+                                <img src="https://picsum.photos/seed/esports/600/400" alt="电竞爱好" class="w-full h-full object-cover transition-transform duration-500 hover:scale-110">
+                            </div>
+                            <div class="p-6">
+                                <div class="w-12 h-12 bg-primary/10 rounded-full flex items-center justify-center mb-4">
+                                    <i class="fa fa-gamepad text-xl text-primary"></i>
+                                </div>
+                                <h3 class="text-xl font-bold text-dark mb-3">电竞</h3>
+                                <p class="text-gray-700">
+                                    电子竞技是我放松和社交的方式，我喜欢团队合作的MOBA游戏，通过游戏结交了许多志同道合的朋友。
+                                </p>
+                            </div>
+                        </div>
+                        
+                        <!-- 爱好4 -->
+                        <div class="bg-gray-50 rounded-xl overflow-hidden shadow-md hover-scale">
+                            <div class="h-48 overflow-hidden">
+                                <img src="https://picsum.photos/seed/swimming/600/400" alt="游泳爱好" class="w-full h-full object-cover transition-transform duration-500 hover:scale-110">
+                            </div>
+                            <div class="p-6">
+                                <div class="w-12 h-12 bg-primary/10 rounded-full flex items-center justify-center mb-4">
+                                    <i class="fa fa-tint text-xl text-primary"></i>
+                                </div>
+                                <h3 class="text-xl font-bold text-dark mb-3">游泳</h3>
+                                <p class="text-gray-700">
+                                    游泳是我最喜欢的运动之一，每周我都会坚持游泳锻炼，不仅能保持身体健康，还能缓解学习压力。
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 联系我 -->
+            <section id="contact" class="py-16 bg-gray-50">
+                <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+                    <div class="text-center mb-12">
+                        <h2 class="text-[clamp(1.75rem,4vw,2.5rem)] font-bold text-dark mb-4">联系方式</h2>
+                        <div class="w-20 h-1 bg-primary mx-auto rounded-full"></div>
+                    </div>
+                    <div class="max-w-4xl mx-auto">
+                        <div class="bg-white rounded-2xl shadow-xl overflow-hidden">
+                            <div class="grid grid-cols-1 md:grid-cols-2">
+                                <div class="bg-primary p-8 md:p-12 text-white">
+                                    <h3 class="text-2xl font-bold mb-6">联系我</h3>
+                                    <p class="mb-8 text-gray-100">
+                                        如果你对我的个人情况或项目感兴趣，欢迎通过以下方式联系我。
+                                    </p>
+                                    <ul class="space-y-4">
+                                        <li class="flex items-center">
+                                            <div class="w-10 h-10 rounded-full bg-white/20 flex items-center justify-center mr-4">
+                                                <i class="fa fa-envelope-o"></i>
+                                            </div>
+                                            <span>gaozj@example.com</span>
+                                        </li>
+                                        <li class="flex items-center">
+                                            <div class="w-10 h-10 rounded-full bg-white/20 flex items-center justify-center mr-4">
+                                                <i class="fa fa-phone"></i>
+                                            </div>
+                                            <span>135 **** 6789</span>
+                                        </li>
+                                        <li class="flex items-center">
+                                            <div class="w-10 h-10 rounded-full bg-white/20 flex items-center justify-center mr-4">
+                                                <i class="fa fa-weixin"></i>
+                                            </div>
+                                            <span>gaozj_2024</span>
+                                        </li>
+                                        <li class="flex items-center">
+                                            <div class="w-10 h-10 rounded-full bg-white/20 flex items-center justify-center mr-4">
+                                                <i class="fa fa-map-marker"></i>
+                                            </div>
+                                            <span>广东省江门市五邑大学</span>
+                                        </li>
+                                    </ul>
+                                    <div class="mt-10">
+                                        <h4 class="text-lg font-semibold mb-4">关注我</h4>
+                                        <div class="flex space-x-4">
+                                            <a href="#" class="w-10 h-10 rounded-full bg-white/20 flex items-center justify-center hover:bg-white/30 transition-colors">
+                                                <i class="fa fa-weibo"></i>
+                                            </a>
+                                            <a href="#" class="w-10 h-10 rounded-full bg-white/20 flex items-center justify-center hover:bg-white/30 transition-colors">
+                                                <i class="fa fa-weixin"></i>
+                                            </a>
+                                            <a href="#" class="w-10 h-10 rounded-full bg-white/20 flex items-center justify-center hover:bg-white/30 transition-colors">
+                                                <i class="fa fa-github"></i>
+                                            </a>
+                                            <a href="#" class="w-10 h-10 rounded-full bg-white/20 flex items-center justify-center hover:bg-white/30 transition-colors">
+                                                <i class="fa fa-linkedin"></i>
+                                            </a>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="p-8 md:p-12">
+                                    <h3 class="text-2xl font-bold text-dark mb-6">留言</h3>
+                                    <form id="contact-form" class="space-y-6">
+                                        <div>
+                                            <label for="name" class="block text-sm font-medium text-gray-700 mb-1">姓名</label>
+                                            <input type="text" id="name" name="name" placeholder="请输入您的姓名" class="w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-primary/50 focus:border-primary outline-none transition-all">
+                                        </div>
+                                        <div>
+                                            <label for="email" class="block text-sm font-medium text-gray-700 mb-1">邮箱</label>
+                                            <input type="email" id="email" name="email" placeholder="请输入您的邮箱" class="w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-primary/50 focus:border-primary outline-none transition-all">
+                                        </div>
+                                        <div>
+                                            <label for="message" class="block text-sm font-medium text-gray-700 mb-1">留言内容</label>
+                                            <textarea id="message" name="message" rows="4" placeholder="请输入您的留言内容..." class="w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-primary/50 focus:border-primary outline-none transition-all resize-none"></textarea>
+                                        </div>
+                                        <button type="submit" class="w-full bg-primary hover:bg-primary/90 text-white font-medium py-3 px-4 rounded-lg shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-0.5 flex items-center justify-center">
+                                            <i class="fa fa-paper-plane mr-2"></i>
+                                            <span>发送留言</span>
+                                        </button>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </main>
+
+        <!-- 页脚 -->
+        <footer class="bg-dark text-white py-12">
+            <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
+                    <div>
+                        <h3 class="text-xl font-bold mb-4">高祖俊</h3>
+                        <p class="text-gray-400">
+                            五邑大学通信工程专业大三学生，热爱技术与生活，不断探索与成长。
+                        </p>
+                    </div>
+                    <div>
+                        <h4 class="text-lg font-semibold mb-4">快速链接</h4>
+                        <ul class="space-y-2">
+                            <li><a href="#about" class="text-gray-400 hover:text-white transition-colors">关于我</a></li>
+                            <li><a href="#education" class="text-gray-400 hover:text-white transition-colors">教育背景</a></li>
+                            <li><a href="#hobbies" class="text-gray-400 hover:text-white transition-colors">兴趣爱好</a></li>
+                            <li><a href="#contact" class="text-gray-400 hover:text-white transition-colors">联系方式</a></li>
+                        </ul>
+                    </div>
+                    <div>
+                        <h4 class="text-lg font-semibold mb-4">联系我</h4>
+                        <ul class="space-y-2">
+                            <li class="flex items-center">
+                                <i class="fa fa-envelope-o text-gray-400 mr-2"></i>
+                                <span class="text-gray-400">gaozj@example.com</span>
+                            </li>
+                            <li class="flex items-center">
+                                <i class="fa fa-phone text-gray-400 mr-2"></i>
+                                <span class="text-gray-400">135 **** 6789</span>
+                            </li>
+                            <li class="flex items-center">
+                                <i class="fa fa-weixin text-gray-400 mr-2"></i>
+                                <span class="text-gray-400">gaozj_2024</span>
+                            </li>
+                        </ul>
+                    </div>
+                    <div>
+                        <h4 class="text-lg font-semibold mb-4">关注我</h4>
+                        <div class="flex space-x-4">
+                            <a href="#" class="w-10 h-10 rounded-full bg-white/10 flex items-center justify-center hover:bg-white/20 transition-colors">
+                                <i class="fa fa-weibo"></i>
+                            </a>
+                            <a href="#" class="w-10 h-10 rounded-full bg-white/10 flex items-center justify-center hover:bg-white/20 transition-colors">
+                                <i class="fa fa-weixin"></i>
+                            </a>
+                            <a href="#" class="w-10 h-10 rounded-full bg-white/10 flex items-center justify-center hover:bg-white/20 transition-colors">
+                                <i class="fa fa-github"></i>
+                            </a>
+                            <a href="#" class="w-10 h-10 rounded-full bg-white/10 flex items-center justify-center hover:bg-white/20 transition-colors">
+                                <i class="fa fa-linkedin"></i>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                <div class="border-t border-gray-800 mt-10 pt-6 text-center text-gray-500">
+                    <p>© 2025 高祖俊的个人网站. 保留所有权利.</p>
+                </div>
+            </div>
+        </footer>
+    </div>
+
+    <!-- JavaScript -->
+    <script>
+        // 登录表单处理
+        document.addEventListener('DOMContentLoaded', function() {
+            const loginForm = document.getElementById('login-form');
+            const loginPage = document.getElementById('login-page');
+            const mainPage = document.getElementById('main-page');
+            const logoutBtn = document.getElementById('logout-btn');
+            const mobileMenuBtn = document.getElementById('mobile-menu-btn');
+            const mobileMenu = document.getElementById('mobile-menu');
+            const contactForm = document.getElementById('contact-form');
+            const navLinks = document.querySelectorAll('nav a, #mobile-menu a');
+            
+            // 登录验证
+            loginForm.addEventListener('submit', function(e) {
+                e.preventDefault();
+                
+                const username = document.getElementById('username').value;
+                const password = document.getElementById('password').value;
+                
+                // 验证账号密码
+                if (username === '123456' && password === '123456') {
+                    // 显示主页面，隐藏登录页面
+                    loginPage.classList.add('hidden');
+                    mainPage.classList.remove('hidden');
+                    
+                    // 添加登录成功动画
+                    mainPage.classList.add('animate-fadeIn');
+                    
+                    // 滚动到顶部
+                    window.scrollTo({ top: 0, behavior: 'smooth' });
+                    
+                    // 显示通知
+                    showNotification('登录成功！欢迎回来，高祖俊。', 'success');
+                } else {
+                    showNotification('账号或密码错误，请重试。', 'error');
+                }
+            });
+            
+            // 退出登录
+            logoutBtn.addEventListener('click', function() {
+                // 显示登录页面，隐藏主页面
+                mainPage.classList.add('hidden');
+                loginPage.classList.remove('hidden');
+                
+                // 重置表单
+                loginForm.reset();
+                
+                // 显示通知
+                showNotification('已成功退出登录。', 'info');
+            });
+            
+            // 移动端菜单切换
+            mobileMenuBtn.addEventListener('click', function() {
+                mobileMenu.classList.toggle('hidden');
+            });
+            
+            // 移动端菜单项点击后关闭菜单
+            navLinks.forEach(link => {
+                link.addEventListener('click', function() {
+                    if (!mobileMenu.classList.contains('hidden')) {
+                        mobileMenu.classList.add('hidden');
+                    }
+                });
+            });
+            
+            // 联系表单提交
+            contactForm.addEventListener('submit', function(e) {
+                e.preventDefault();
+                
+                // 显示通知
+                showNotification('留言已发送成功，感谢您的联系！', 'success');
+                
+                // 重置表单
+                contactForm.reset();
+            });
+            
+            // 平滑滚动
+            navLinks.forEach(link => {
+                link.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    
+                    const targetId = this.getAttribute('href');
+                    const targetElement = document.querySelector(targetId);
+                    
+                    if (targetElement) {
+                        window.scrollTo({
+                            top: targetElement.offsetTop - 80,
+                            behavior: 'smooth'
+                        });
+                    }
+                });
+            });
+            
+            // 导航栏滚动效果
+            window.addEventListener('scroll', function() {
+                const header = document.querySelector('header');
+                
+                if (window.scrollY > 50) {
+                    header.classList.add('bg-primary/95', 'backdrop-blur-sm', 'shadow-lg');
+                    header.classList.remove('bg-primary');
+                } else {
+                    header.classList.remove('bg-primary/95', 'backdrop-blur-sm', 'shadow-lg');
+                    header.classList.add('bg-primary');
+                }
+            });
+            
+            // 通知函数
+            function showNotification(message, type = 'info') {
+                // 创建通知元素
+                const notification = document.createElement('div');
+                notification.className = `fixed top-4 right-4 p-4 rounded-lg shadow-lg z-50 transform transition-all duration-500 translate-x-full ${
+                    type === 'success' ? 'bg-green-500 text-white' : 
+                    type === 'error' ? 'bg-red-500 text-white' : 
+                    'bg-blue-500 text-white'
+                }`;
+                notification.innerHTML = `
+                    <div class="flex items-center">
+                        <i class="fa fa-${
+                            type === 'success' ? 'check-circle' : 
+                            type === 'error' ? 'exclamation-circle' : 
+                            'info-circle'
+                        } mr-2"></i>
+                        <span>${message}</span>
+                    </div>
+                `;
+                
+                // 添加到页面
+                document.body.appendChild(notification);
+                
+                // 显示通知
+                setTimeout(() => {
+                    notification.classList.remove('translate-x-full');
+                    notification.classList.add('translate-x-0');
+                }, 100);
+                
+                // 自动关闭
+                setTimeout(() => {
+                    notification.classList.remove('translate-x-0');
+                    notification.classList.add('translate-x-full');
+                    
+                    // 移除元素
+                    setTimeout(() => {
+                        document.body.removeChild(notification);
+                    }, 500);
+                }, 3000);
+            }
+        });
+    </script>
+</body>
+</html>
+    
